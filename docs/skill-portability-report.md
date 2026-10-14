@@ -61,6 +61,7 @@
 | 1 | 진단·수정 도구 `tools/skill_doctor.py` 작성 (`audit` / `fix` / `budget`) | 원본 진단 ERROR·WARN 9건 → 수정본 재진단 0건 |
 | 2 | 수정본 3종 생성 및 재업로드용 zip 패키징 | `consulting-deck-suite.zip`(v0.2.4), `iqvia-ppt-template.zip`(v1.2.1), `skill-versioning.zip` |
 | 3 | 이 저장소의 `.claude/settings.json`에 `SLASH_COMMAND_TOOL_CHAR_BUDGET=190000` 설정 | 이 저장소에서 여는 Claude Code 세션은 내 스킬 설명이 모두 노출된다 |
+| 4 | (10/14 추가) 같은 파일에서 small-business·sales·nimble·adobe-for-creativity·figma를 `enabledPlugins`로 끄고 예산을 90,000으로 낮춤 | 실측: 5개를 끄면 **기본 예산만으로도** 내 스킬 28개 설명이 모두 노출된다. claude.ai·Cowork 계정 설정은 바뀌지 않는다 |
 
 > zip에는 IQVIA 템플릿·폰트·내부 정책이 들어 있다. 이 저장소는 **public**이므로 zip과 스킬 원문은 커밋하지 않았다(대화 첨부로만 전달).
 
@@ -73,7 +74,7 @@
    ```bash
    python3 tools/skill_doctor.py budget --apply      # ~/.claude/settings.json 의 env에 기록
    ```
-3. **(권장) 안 쓰는 마켓플레이스 플러그인 끄기** — 예산을 키우면 세션마다 목록이 약 4~5만 토큰을 차지한다. 컨설팅·제약 업무와 거리가 먼 small-business(44개), sales(36개), nimble(15개), adobe(15개), figma(14개)를 끄면 목록이 약 8만 자 줄어든다. 그 뒤 `budget`을 다시 실행해 예산을 낮추면 된다.
+3. **(권장) 안 쓰는 마켓플레이스 플러그인 끄기** — PC의 Claude Code는 `claude plugin disable sales@synced --scope user`처럼 명령으로도 끌 수 있다(이름은 `claude plugin list`로 확인). — 예산을 키우면 세션마다 목록이 약 4~5만 토큰을 차지한다. 컨설팅·제약 업무와 거리가 먼 small-business(44개), sales(36개), nimble(15개), adobe(15개), figma(14개)를 끄면 목록이 약 8만 자 줄어든다. 그 뒤 `budget`을 다시 실행해 예산을 낮추면 된다.
 
 ### 4-3. 보안 권고 — dart-lookup 인증키
 

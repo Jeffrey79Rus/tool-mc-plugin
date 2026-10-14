@@ -1,5 +1,12 @@
 {
   "env": {
-    "SLASH_COMMAND_TOOL_CHAR_BUDGET": "190000"
+    "SLASH_COMMAND_TOOL_CHAR_BUDGET": "90000"
+  },
+  "enabledPlugins": {
+    "small-business@synced": false,
+    "sales@synced": false,
+    "nimble@synced": false,
+    "adobe-for-creativity@synced": false,
+    "figma@synced": false
   }
 }
