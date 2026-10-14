@@ -91,3 +91,16 @@ python3 tools/skill_doctor.py budget           # 예산 계산만
 ```
 
 스킬을 새로 만들거나 고친 뒤 `audit`을 돌리면 같은 유형의 결함을 배포 전에 잡을 수 있다.
+
+## 6. 최종 검증 결과 (2026-10-14~15)
+
+| 표면 | 검증 내용 | 결과 |
+|---|---|---|
+| claude.ai 계정 | 수정 플러그인 3종 재등록(consulting-deck-suite 0.2.4, iqvia-ppt-template 1.2.1, harness-pipeline 0.2.0), skill-versioning 수정본 반영, 미사용 플러그인 5종 비활성화 | ✅ |
+| Claude Code (클라우드) | 새 세션에서 내 스킬 28개 설명 전부 노출, 수정본 재진단 ERROR·WARN 0건 | ✅ |
+| Claude Code (PC) | `~/.claude/settings.json`에 `SLASH_COMMAND_TOOL_CHAR_BUDGET=120000` 추가 후 재시작 → `fact-verify` 설명 노출, `claude plugin list`에서 수정본 버전 로드 확인 | ✅ |
+| Cowork·claude.ai 채팅 | 직접 검증 안 함 | 미확인 |
+
+- PC는 클라우드보다 스킬이 많아(로컬 설치분 포함) 플러그인 비활성화만으로는 부족했고, 예산 설정이 추가로 필요했다.
+- 남은 무해 경고: `~/.claude/skills/harness-pipeline` 링크가 정식 설치본과 이름이 겹쳐 로드되지 않는다는 경고(기능 영향 없음, 링크 삭제로 제거 가능).
+- dart-lookup 인증키 건은 사용자 판단으로 보류.
