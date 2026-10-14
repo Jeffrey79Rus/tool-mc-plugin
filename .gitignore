@@ -43,3 +43,7 @@ build/
 Thumbs.db
 .vscode/
 .idea/
+
+# ── 6. skill_doctor 수정본 출력 (내부 자료 포함, public 저장소에 올리지 않음) ──
+skill-fixes/
+*.zip
