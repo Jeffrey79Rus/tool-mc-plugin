@@ -1,0 +1,45 @@
+# ── 1. 비밀키·인증 정보 (최우선) ──
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials*.json
+*secret*
+*token*
+secrets/
+.aws/
+.ssh/
+
+# ── 2. Claude Code 로컬 설정 (개인 환경, 권한, 토큰이 섞일 수 있음) ──
+.claude/settings.local.json
+.claude/*.local.*
+CLAUDE.local.md
+
+# ── 3. 업무·개인 데이터 (스킬 개발 중 쓰는 원본 자료) ──
+data/
+inputs/
+private/
+drafts/
+*.xlsx
+*.docx
+*.pdf
+!docs/**/*.pdf
+
+# ── 4. 의존성·빌드·캐시 ──
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+dist/
+build/
+*.log
+
+# ── 5. OS·편집기 임시 파일 ──
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
