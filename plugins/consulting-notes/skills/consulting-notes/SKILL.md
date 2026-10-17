@@ -21,6 +21,7 @@ description: 회의·인터뷰 녹음 전사본을 전략컨설팅 형식의 미
 | 추가 필수 | — | 가설 검증 표 |
 
 두 유형 모두 **기본 정보 · Executive Summary · 본문(아젠다/KQ별) · 결론 · To-do**를 반드시 포함한다.
+Executive Summary는 **한 줄 결론 + 배경 및 목적 · 주요 논의 내용(인터뷰는 핵심 발견) · 주요 일정 및 To-do** 세 블록으로 쓴다.
 유형이 불분명하면 사용자에게 묻는다. 인터뷰노트라면 사전 가설 목록이 있는지도 묻는다.
 
 ## 1. 입력 확보
@@ -29,6 +30,7 @@ description: 회의·인터뷰 녹음 전사본을 전략컨설팅 형식의 미
 2. **전사본이 있다** → `.json`(Whisper 출력), `.srt`(Whisper·클로바노트), `.vtt`(Teams·Zoom, 화자 포함)를 그대로 쓴다.
 3. **타임스탬프 없는 메모뿐이다** → 출처 연결이 불가능하므로 사용자에게 알리고, 녹음 또는 타임스탬프 전사본을 요청한다.
 4. 기본 정보(미팅명·목적·일시·참석자)는 사용자에게 받거나 전사본에서 찾는다. **모르면 `[확인 필요]`로 두고 지어내지 않는다.**
+   일시가 미상이면 날짜를 비워 두고 빌드할 때 `--audio <녹음 파일>`을 준다. 녹음 업로드일이 날짜로 들어가고 "확인 필요"가 붙으며, HTML에서 캘린더로 고칠 수 있다.
 
 전사본이 길면 전체를 읽되, 필요하면 `headroom` 스킬로 구간을 나눠 읽는다.
 
@@ -40,7 +42,8 @@ description: 회의·인터뷰 녹음 전사본을 전략컨설팅 형식의 미
 
 핵심 규칙:
 - 모든 문장에 `src`(전사본 시각 `"12:42"`, 범위 `"12:42-12:49"`, 세그먼트 `"#34"`)를 단다. 출처 없이 쓰는 해석·종합은 `"basis": "I"`로 표시한다.
-- 시간순이 아니라 **아젠다/Key Question 단위**로 묶는다. Executive Summary는 결론부터 쓴다.
+- **노트 전체를 짧은 개조식(~음 / ~임 / ~함)으로 쓴다.** "~했다" 문장체는 쓰지 않는다.
+- 시간순이 아니라 **주제·사안 단위**로 구조화한다. 아젠다(주제) 안을 `groups`(사안)로 나누고, 같은 주제가 여러 시점에 나오면 한 아젠다로 모은다. Executive Summary는 결론부터 쓴다.
 - 화자 구분이 없는 전사본이면 `speakers.ranges`로 구간별 화자를 문맥 추정해 넣고 `"inferred": true`로 둔다.
 - 업무와 무관한 사적 대화는 노트에서 빼고 `excluded`에 시각 범위만 적는다. 공유본 스크립트에서도 가릴 구간은 `"redact": true`.
 - 전사 오인식 용어는 `glossary`에 대응표로 남긴다. 스크립트 원문은 고치지 않는다.
@@ -64,16 +67,16 @@ python <이 스킬 폴더>/scripts/build_note.py --note note.json --transcript m
 
 ```bash
 # Artifact로 게시할 때 (Claude Code·claude.ai에서 Artifact 도구가 있으면 이쪽)
-python <이 스킬 폴더>/scripts/build_note.py --note note.json --transcript meeting.json --out note.html --strict
+python <이 스킬 폴더>/scripts/build_note.py --note note.json --transcript meeting.json --audio <녹음 파일> --out note.html --strict
 # 파일로 공유할 때 (메일·드라이브 첨부)
-python <이 스킬 폴더>/scripts/build_note.py --note note.json --transcript meeting.json --out note.html --strict --standalone
+python <이 스킬 폴더>/scripts/build_note.py --note note.json --transcript meeting.json --audio <녹음 파일> --out note.html --strict --standalone
 ```
 
 - `--strict`는 미검증 항목이 하나라도 있으면 빌드를 멈춘다. 최종본은 항상 `--strict`로 만든다.
 - HTML 구성: 기본 정보 → Executive Summary → 본문 → (가설 검증) → 결론 → To-do → (열린 이슈) → Appendix A 전사·검증 메모 → Appendix B 스크립트 원문.
-- 출처 칩(`12:42 · 화자`)을 누르면 그 자리에서 원문이 펼쳐지고, 원문 시각을 누르면 Appendix B의 해당 줄로 이동한다.
-- Appendix B 스크립트는 상단 토글로 켜고 끈다. 기본은 꺼짐이며, 꺼져 있으면 보이지 않는다.
-- Artifact 도구가 있으면 `note.html`을 게시해 링크를 준다. 게시물은 기본 비공개이므로, **링크 공유는 사용자가 페이지의 Share 메뉴에서 직접 켜야 한다**고 알린다.
+- 각 문장 오른쪽 검증 칸에 **메모 · 판정(전사 일치/확인 필요) · 원문 시각 버튼**이 같은 자리에 정렬된다. 본문은 내용만 읽게 하고, 검토 메모와 전사 원문은 접혀 있다가 버튼을 누르면 문장 아래에 펼쳐진다. 원문의 시각을 누르면 Appendix B의 해당 줄로 이동한다.
+- Appendix(A 전사·검증 메모, B 스크립트 원문)는 통째로 접혀 있다. B 스크립트는 그 안에서 다시 토글로 켜고 끈다.
+- Artifact 도구가 있으면 `note.html`을 게시해 링크를 준다. **게시할 때 `capabilities: {"db": {}}`를 함께 준다** — 일시의 "날짜 수정"이 링크를 보는 모두에게 반영되게 하는 저장소다. 파일로 공유한 HTML에서는 고친 날짜가 고친 사람의 브라우저에만 남는다. 게시물은 기본 비공개이므로, **링크 공유는 사용자가 페이지의 Share 메뉴에서 직접 켜야 한다**고 알린다.
 
 ## 5. 사용자에게 보고
 

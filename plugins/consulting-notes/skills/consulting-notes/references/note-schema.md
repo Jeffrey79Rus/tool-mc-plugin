@@ -25,13 +25,16 @@
   "short_title": "탭 제목용 짧은 이름 (선택)",
   "meta": {
     "purpose": "미팅 목적 한 문장",
+    "date": "2026-10-17",                  // 선택. 없으면 datetime에서 날짜를 찾는다
+    "time": "14:00–15:00",                 // 선택
     "datetime": "2026-10-17 14:00–15:00 또는 '미상 [확인 필요]'",
     "format": "대면 / 화상 / 전화",
     "interviewee": "Expert A — 前 ○○사 전략 임원 (인터뷰 전용, 실명 금지)",
     "attendees": [{"side": "당사", "name": "홍길동", "role": "PM"}],
     "author": "작성자", "written": "작성일", "version": "v1",
     "confidentiality": "대외비",
-    "source": {"audio": "38:12", "engine": "Whisper large-v3-turbo", "quality": "상/중/하", "diarization": "문맥 추정 / VTT 화자 / 없음"}
+    "source": {"audio": "38:12", "engine": "Whisper large-v3-turbo", "quality": "상/중/하", "diarization": "문맥 추정 / VTT 화자 / 없음",
+               "uploaded": "2026-10-15"}   // 선택. 녹음 업로드일 (--audio 를 못 줄 때)
   },
   "speakers": {
     "inferred": true,
@@ -39,14 +42,17 @@
     "overrides": {"04:53-05:02": "고객사", "#202": "당사"},
     "note": "화자 표시 설명 (선택, 기본 문구 있음)"
   },
-  "executive_summary": {
+  "executive_summary": {                   // 모든 문장은 짧은 개조식(~음 / ~임)
     "headline": item,                      // 한 줄 결론
-    "points": [item, ...],                 // 미팅: 핵심 논의·합의 / 인터뷰: 핵심 발견 (3~5개)
-    "so_what": item                        // 우리에게 의미 (보통 basis I)
+    "background": [item, ...],             // 미팅(인터뷰) 배경 및 목적 (1~2개)
+    "points": [item, ...],                 // 미팅: 주요 논의 내용 / 인터뷰: 핵심 발견 (3~5개)
+    "schedule": [item, ...]                // 주요 일정 및 To-do (2~4개, 날짜·담당 중심. 상세는 todos 표)
   },
-  "agenda": [
-    {"title": "아젠다명 또는 KQ 제목", "time": "00:22–03:25", "question": "Key Question 문장 (인터뷰)",
-     "items": [item, ...], "implication": item}
+  "agenda": [                              // 시간순이 아니라 주제별. 아젠다 안은 사안별 groups로 나눈다
+    {"title": "주제명 또는 KQ 제목", "time": "00:22–03:25, 12:10–14:02", "question": "Key Question 문장 (인터뷰)",
+     "items": [item, ...],                 // 사안으로 나눌 필요가 없을 때만
+     "groups": [{"label": "사안명", "items": [item, ...]}],
+     "implication": item}
   ],
   "hypotheses": [                          // 인터뷰 필수
     {"h": "가설 문장", "verdict": "support|refute|neutral", "evidence": "근거 요약", "src": [...], "check": "ok"}
@@ -69,6 +75,13 @@
 
 - `meeting`: `meta`, `executive_summary`, `agenda`, `conclusion`, `todos`
 - `interview`: 위 5개 + `hypotheses`
+- `executive_summary`: `background`, `points`, `schedule` (`so_what`은 더 이상 표시하지 않는다)
+
+## 일시
+
+- 날짜를 알면 `meta.date`(YYYY-MM-DD)와 `meta.time`에 넣는다.
+- 미상이면 비워 두고 빌드에 `--audio <녹음 파일>`을 준다. 녹음 파일의 업로드(수정)일을 날짜로 쓰고 "업로드일 기준 · 확인 필요"를 붙인다. 녹음 파일이 없으면 `source.uploaded`, 그것도 없으면 빌드한 날을 쓴다.
+- HTML의 "날짜 수정" 버튼(캘린더)으로 고칠 수 있다. Artifact로 게시하면 링크를 보는 모두에게 반영되고, 파일로 공유하면 고친 사람의 브라우저에만 남는다.
 
 ## 빌드 검사 항목
 

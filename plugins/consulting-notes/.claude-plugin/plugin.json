@@ -1,6 +1,6 @@
 {
   "name": "consulting-notes",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "회의·인터뷰 전사본을 전략컨설팅 형식의 미팅노트·인터뷰노트로 정리한다. 모든 문장을 전사 원문과 팩트체크하고, 출처(시각·화자)를 누르면 원문이 펼쳐지는 공유용 HTML로 만든다.",
   "author": {
     "name": "Jeffrey Chun"
