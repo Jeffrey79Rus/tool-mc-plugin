@@ -318,7 +318,7 @@ def render_panels(it: dict, tl: Timeline) -> str:
                 f'<div class="qline"><a class="qt" href="#s{s["id"]}" title="스크립트 원문에서 위치 보기">{tl.fmt(s["start"])}</a>'
                 f'<span class="qs">{e(s.get("speaker") or "미상")}</span><span class="qx">{e(s["text"])}</span></div>' for s in segs)
             gs.append(f'<div class="qg">{lines}</div>')
-        out += (f'<div class="quotes" id="q-{iid}" hidden><p class="quotes-h">전사 원문 · 자동 전사 그대로, 수정하지 않음</p>'
+        out += (f'<div class="quotes" id="q-{iid}" hidden><p class="quotes-h">관련 원문 {len(groups)}곳 · 자동 전사 그대로, 수정하지 않음</p>'
                 + "".join(gs) + "</div>")
     return out
 
@@ -371,7 +371,8 @@ def render(note: dict, tl: Timeline, stats: dict, items: list, audio: str | None
         if k == "일시":
             dl += f'<div class="meta-date"><dt>일시</dt>{date_dd}</div>'
         elif v:
-            dl += f"<div><dt>{e(k)}</dt><dd>{v}</dd></div>"
+            wide = ' class="wide"' if k in ("미팅명", "목적", "인터뷰이") else ""
+            dl += f"<div{wide}><dt>{e(k)}</dt><dd>{v}</dd></div>"
     att = m.get("attendees", [])
     att_html = ""
     if att:
@@ -382,7 +383,7 @@ def render(note: dict, tl: Timeline, stats: dict, items: list, audio: str | None
                                        src.get("quality") and f"전사 품질 {src['quality']}",
                                        src.get("diarization") and f"화자 {src['diarization']}"] if x)
     src_html = f'<p class="src-line">소스 · {e(src_line)}</p>' if src_line else ""
-    parts.append(section("01", "info", "기본 정보", "Overview", f'<dl class="meta">{dl}</dl>{att_html}{src_html}'))
+    parts.append(section("1", "info", "기본 정보", "Overview", f'<dl class="meta">{dl}</dl>{att_html}{src_html}'))
     nav.append(("info", "기본 정보"))
 
     # 02 Executive Summary
@@ -397,7 +398,7 @@ def render(note: dict, tl: Timeline, stats: dict, items: list, audio: str | None
         if es.get(key):
             blocks += f'<div class="es-row"><h3 class="es-l">{e(es_label(t, key))}</h3>{item_list(es[key], tl)}</div>'
     body += f'<div class="es">{blocks}</div>'
-    parts.append(section("02", "summary", "Executive Summary", "요약", body))
+    parts.append(section("2", "summary", "Executive Summary", "요약", body))
     nav.append(("summary", "요약"))
 
     # 03 아젠다 / Key Question — 주제·사안별
@@ -414,13 +415,13 @@ def render(note: dict, tl: Timeline, stats: dict, items: list, audio: str | None
             im = ag["implication"]
             imp = (f'<div class="impl"><p class="impl-l">시사점</p><ul class="items"><li class="it">'
                    f'<p class="item-text">{e(item_text(im))}{basis_tag(im)}</p>{render_rail(im, tl)}{render_panels(im, tl)}</li></ul></div>')
-        body += (f'<article class="agenda"><header class="ag-h"><span class="ag-n">{ai}</span><h3>{e(ag["title"])}</h3>{tm}</header>'
+        body += (f'<article class="agenda"><header class="ag-h"><span class="ag-n">3.{ai}</span><h3>{e(ag["title"])}</h3>{tm}</header>'
                  f'{kq}{groups}{imp}</article>')
     if t == "interview":
-        parts.append(section("03", "body", "Key Question별 신규 정보", "Findings", body))
+        parts.append(section("3", "body", "Key Question별 신규 정보", "Findings", body))
         nav.append(("body", "신규 정보"))
     else:
-        parts.append(section("03", "body", "아젠다별 논의 내용", "Discussion", body))
+        parts.append(section("3", "body", "아젠다별 논의 내용", "Discussion", body))
         nav.append(("body", "논의 내용"))
 
     n = 4
@@ -434,7 +435,7 @@ def render(note: dict, tl: Timeline, stats: dict, items: list, audio: str | None
                        f'<td class="cell-main">{e(h.get("evidence"))}{render_panels(h, tl)}</td><td class="rail-cell">{render_rail(h, tl)}</td></tr>')
         body = ('<div class="tbl-wrap"><table class="hyp"><thead><tr><th>가설</th><th>판정</th><th>근거</th><th class="th-rail">검증 · 원문</th></tr></thead><tbody>'
                 + rows_h + "</tbody></table></div>")
-        parts.append(section(f"{n:02d}", "hyp", "가설 검증", "Hypotheses", body)); nav.append(("hyp", "가설 검증")); n += 1
+        parts.append(section(f"{n}", "hyp", "가설 검증", "Hypotheses", body)); nav.append(("hyp", "가설 검증")); n += 1
 
     # 결론
     c = note["conclusion"]
@@ -446,7 +447,7 @@ def render(note: dict, tl: Timeline, stats: dict, items: list, audio: str | None
     if c.get("items"):
         label = c.get("items_label") or ("시사점" if t == "interview" else "결정사항")
         body += f'<h3 class="sub">{e(label)}</h3>{item_list(c["items"], tl, ordered=True)}'
-    parts.append(section(f"{n:02d}", "conclusion", "결론", "Conclusion", body)); nav.append(("conclusion", "결론")); n += 1
+    parts.append(section(f"{n}", "conclusion", "결론", "Conclusion", body)); nav.append(("conclusion", "결론")); n += 1
 
     # To-do
     rows_t = ""
@@ -457,10 +458,10 @@ def render(note: dict, tl: Timeline, stats: dict, items: list, audio: str | None
     sub = "후속 확인·추가 질문" if t == "interview" else "Action Items"
     body = ('<div class="tbl-wrap"><table class="todo"><thead><tr><th>#</th><th>할 일</th><th>담당</th><th>기한</th><th>상태</th>'
             '<th class="th-rail">검증 · 원문</th></tr></thead><tbody>' + rows_t + "</tbody></table></div>")
-    parts.append(section(f"{n:02d}", "todo", "To-do", sub, body)); nav.append(("todo", "To-do")); n += 1
+    parts.append(section(f"{n}", "todo", "To-do", sub, body)); nav.append(("todo", "To-do")); n += 1
 
     if note.get("open_issues"):
-        parts.append(section(f"{n:02d}", "issues", "열린 이슈·리스크", "Open Issues", item_list(note["open_issues"], tl)))
+        parts.append(section(f"{n}", "issues", "열린 이슈·리스크", "Open Issues", item_list(note["open_issues"], tl)))
         nav.append(("issues", "열린 이슈")); n += 1
 
     # Appendix — 접힌 상태가 기본. A 전사·검증 메모 / B 스크립트 원문(토글)
@@ -508,7 +509,7 @@ def render(note: dict, tl: Timeline, stats: dict, items: list, audio: str | None
               '<button type="button" class="btn" data-toggle-script aria-pressed="true">스크립트 숨기기</button></div>'
               f'<div class="script">{"".join(lines)}</div></div></div>')
     parts.append('<section class="sec appx" id="appendix"><details id="appx"><summary class="appx-sum">'
-                 '<span class="sec-n">A–B</span><h2>Appendix</h2><span class="appx-desc">전사·검증 메모 · 스크립트 원문</span>'
+                 '<span class="sec-n">+</span><h2>Appendix</h2><span class="appx-desc">전사·검증 메모 · 스크립트 원문</span>'
                  '<span class="appx-act" aria-hidden="true"></span></summary>'
                  f'<div class="appx-body">{appx_a}{appx_b}</div></details></section>')
     nav.append(("appendix", "Appendix"))
