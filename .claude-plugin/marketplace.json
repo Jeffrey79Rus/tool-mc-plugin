@@ -1,0 +1,22 @@
+{
+  "name": "tool-mc-plugin",
+  "owner": {
+    "name": "Jeffrey Chun"
+  },
+  "metadata": {
+    "description": "전략컨설팅 업무 자동화 플러그인 모음",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "consulting-notes",
+      "source": "./plugins/consulting-notes",
+      "description": "미팅노트·인터뷰노트 작성, 전사 원문 팩트체크, 출처 연결 공유용 HTML"
+    },
+    {
+      "name": "whisper",
+      "source": "./plugins/whisper",
+      "description": "faster-whisper 녹음 받아쓰기 (한국어 포함 99개 언어)"
+    }
+  ]
+}
