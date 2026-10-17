@@ -10,8 +10,10 @@ description: 회의·인터뷰·강의 녹음(mp3, m4a, wav, mp4 등)을 faster-
 ## 1. 환경 준비 (처음 한 번)
 
 ```bash
-bash <이 스킬 폴더>/scripts/setup.sh      # macOS·Linux: ~/.cache/whisper-skill/venv 생성
+bash <이 스킬 폴더>/scripts/setup.sh      # 마지막 줄 "준비됨: <python 경로>"를 다음 단계에서 쓴다
 ```
+
+- 이미 설치돼 있으면(클라우드 환경 설정 스크립트로 설치한 경우 포함) 바로 그 python 경로를 알려 준다. 없으면 `~/.cache/whisper-skill/venv`를 만들어 설치한다.
 
 - Windows: `py -m pip install "faster-whisper==1.2.1" "av==16.1.0"` 후 `py <스킬 폴더>\scripts\transcribe.py ...`
 - `ffmpeg`가 있어야 한다.
@@ -29,7 +31,7 @@ Claude Code 클라우드 환경이면 환경 설정의 네트워크 액세스를
 ## 2. 실행
 
 ```bash
-PY=~/.cache/whisper-skill/venv/bin/python
+PY=<setup.sh가 알려 준 python 경로>
 $PY <이 스킬 폴더>/scripts/transcribe.py <녹음 파일> -l ko -o <출력 폴더> --prompt "<고유명사, 회사명, 약어>"
 ```
 
