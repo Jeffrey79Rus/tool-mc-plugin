@@ -1,0 +1,10 @@
+{
+  "name": "whisper",
+  "version": "1.0.0",
+  "description": "faster-whisper로 회의·인터뷰 녹음을 로컬에서 받아쓴다(한국어 포함 99개 언어). txt·srt·md·json 전사본을 만들고 consulting-notes 스킬로 이어진다.",
+  "author": {
+    "name": "Jeffrey Chun"
+  },
+  "license": "Proprietary",
+  "keywords": ["whisper", "transcribe", "speech-to-text", "stt", "meeting", "korean"]
+}
