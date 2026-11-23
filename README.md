@@ -7,6 +7,7 @@
 |---|---|---|
 | `consulting-notes` | `consulting-notes` | 회의·인터뷰 전사본 → 미팅노트/인터뷰노트. 모든 문장을 전사 원문과 팩트체크하고, 출처(시각·화자)를 누르면 원문이 펼쳐지는 공유용 HTML 생성 |
 | `whisper` | `whisper-transcribe` | 녹음 파일 → txt·srt·md·json 전사본 (faster-whisper, 한국어 포함 99개 언어) |
+| `shorts` | `shorts` | 긴 영상 → 쇼츠·릴스·틱톡용 세로 클립. Claude가 구간을 점수화해 제안하고, 승인한 구간을 Remotion 애니메이션 자막과 함께 렌더링·플랫폼별 인코딩 (원본: [AgriciDaniel/claude-shorts](https://github.com/AgriciDaniel/claude-shorts), MIT) |
 
 두 스킬은 이어서 쓴다: 녹음 → `whisper-transcribe` → `.json` → `consulting-notes` → HTML 노트.
 
@@ -18,6 +19,7 @@
 /plugin marketplace add jeffrey79rus/tool-mc-plugin
 /plugin install consulting-notes@tool-mc-plugin
 /plugin install whisper@tool-mc-plugin
+/plugin install shorts@tool-mc-plugin
 ```
 
 비공개 저장소라면 GitHub 인증(`gh auth login` 또는 git 자격 증명)이 되어 있어야 한다.
@@ -26,8 +28,8 @@
 
 `packages/` 폴더의 zip을 claude.ai에 올리면 계정에 동기화되어 웹·데스크톱·Cowork·클라우드 세션에서 쓸 수 있다.
 
-- **플러그인으로 올리기**: `consulting-notes-plugin.zip`, `whisper-plugin.zip` — 기존 플러그인(consulting-deck-suite 등)을 올린 것과 같은 메뉴에서 업로드
-- **스킬로 올리기**: `consulting-notes-skill.zip`, `whisper-transcribe-skill.zip` — 설정의 스킬 메뉴에서 zip 업로드
+- **플러그인으로 올리기**: `consulting-notes-plugin.zip`, `whisper-plugin.zip`, `shorts-plugin.zip` — 기존 플러그인(consulting-deck-suite 등)을 올린 것과 같은 메뉴에서 업로드
+- **스킬로 올리기**: `consulting-notes-skill.zip`, `whisper-transcribe-skill.zip`, `shorts-skill.zip` — 설정의 스킬 메뉴에서 zip 업로드
 
 zip은 `python tools/package.py`로 다시 만든다.
 
@@ -39,6 +41,12 @@ zip은 `python tools/package.py`로 다시 만든다.
 - Claude Code 클라우드 환경이면 환경 설정 → 네트워크 액세스 "사용자 지정"에 위 도메인 추가, 설정 스크립트에 다음 줄을 넣으면 세션마다 자동 설치된다:
   `pip install "faster-whisper==1.2.1" "av==16.1.0"`
 - claude.ai 채팅의 코드 실행 환경은 외부 접속 제한으로 모델을 받지 못할 수 있다. 받아쓰기는 Claude Code나 Cowork에서 실행한다.
+
+## 실행 환경 요건 (shorts)
+
+- `ffmpeg`, `jq`, Python 3.10 이상, Node.js 18 이상. NVIDIA GPU가 있으면 빠르지만 없어도(CPU) 동작한다.
+- 처음 한 번 `bash <스킬 폴더>/setup.sh` 실행 — Python 가상환경(`~/.shorts-skill`)에 faster-whisper·mediapipe·opencv·PyTorch를 설치하고 `remotion/`에서 `npm install`을 돌린다.
+- 사용: Claude Code에서 `/shorts <영상 파일>`. 영상 렌더링은 무거우므로 로컬 Claude Code(데스크톱·CLI)에서 실행을 권장한다.
 
 ## 구조
 
@@ -58,6 +66,14 @@ plugins/
       SKILL.md
       scripts/transcribe.py, setup.sh
       references/benchmarks.md
+  shorts/
+    .claude-plugin/plugin.json
+    skills/shorts/
+      SKILL.md                       # 10단계 대화형 파이프라인
+      setup.sh, requirements.txt
+      scripts/                       # 전사·구간 분석·크롭 계산·내보내기
+      remotion/                      # 세로 영상·애니메이션 자막 렌더러 (React)
+      references/                    # 점수 기준, 자막 스타일, 플랫폼 규격
 packages/                            # claude.ai 업로드용 zip
 tools/package.py
 ```

@@ -1,0 +1,12 @@
+{
+  "name": "shorts",
+  "version": "1.1.0",
+  "description": "긴 영상에서 쇼츠·릴스·틱톡용 세로 클립을 뽑아 애니메이션 자막(Remotion)과 함께 렌더링하는 대화형 파이프라인. 원본: AgriciDaniel/claude-shorts (MIT)",
+  "author": {
+    "name": "AgriciDaniel",
+    "url": "https://github.com/AgriciDaniel/claude-shorts"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/AgriciDaniel/claude-shorts",
+  "keywords": ["shorts", "reels", "tiktok", "video", "captions", "remotion", "faster-whisper"]
+}

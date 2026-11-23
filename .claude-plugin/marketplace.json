@@ -17,6 +17,11 @@
       "name": "whisper",
       "source": "./plugins/whisper",
       "description": "faster-whisper 녹음 받아쓰기 (한국어 포함 99개 언어)"
+    },
+    {
+      "name": "shorts",
+      "source": "./plugins/shorts",
+      "description": "긴 영상 → 쇼츠·릴스·틱톡 세로 클립 (AI 구간 선별, Remotion 애니메이션 자막, 플랫폼별 인코딩). 원본: AgriciDaniel/claude-shorts"
     }
   ]
 }
