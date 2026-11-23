@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "전략컨설팅 업무 자동화 플러그인 모음",
-    "version": "1.0.0"
+    "version": "1.1.0"
   },
   "plugins": [
     {
@@ -17,6 +17,11 @@
       "name": "whisper",
       "source": "./plugins/whisper",
       "description": "faster-whisper 녹음 받아쓰기 (한국어 포함 99개 언어)"
+    },
+    {
+      "name": "yt-dlp",
+      "source": "./plugins/yt-dlp",
+      "description": "yt-dlp 영상·음성·자막 내려받기 (YouTube 등). 자막→전사본 변환, whisper·consulting-notes로 연계"
     }
   ]
 }

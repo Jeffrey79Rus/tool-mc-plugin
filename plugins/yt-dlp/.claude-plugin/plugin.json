@@ -1,0 +1,10 @@
+{
+  "name": "yt-dlp",
+  "version": "1.0.0",
+  "description": "yt-dlp로 YouTube·Vimeo 등 수천 개 사이트의 영상·음성·자막을 내려받는다. 음성만 받아 whisper-transcribe로 받아쓰거나, 자막이 있으면 그대로 전사본(.json/.srt/.txt)으로 바꿔 consulting-notes로 이어진다.",
+  "author": {
+    "name": "Jeffrey Chun"
+  },
+  "license": "Proprietary",
+  "keywords": ["yt-dlp", "youtube", "download", "video", "audio", "subtitles", "transcript"]
+}
